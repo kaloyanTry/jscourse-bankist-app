@@ -22,8 +22,8 @@ const openModalWindow = function (e) {
 
 const closeModalWindow = function (e) {
   e.preventDefault();
-  modal.classList.remove('hidden');
-  overlay.classList.remove('hidden');
+  modal.classList.add('hidden');
+  overlay.classList.add('hidden');
 };
 
 btnsOpenModal.forEach(btn => btn.addEventListener('click', openModalWindow));
@@ -32,38 +32,49 @@ overlay.addEventListener('click', closeModalWindow);
 
 // Close modal window when type Esc button:
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape' && !model.classList.contains('hidden')) {
+  if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
     closeModalWindow();
   }
 });
 
 ////////////////////////////////////////////////////////////////////////
 // Button scrolling:
+
 btnScrollTo.addEventListener('click', function (e) {
   section1.scrollIntoView({ behavior: 'smooth' });
 });
 
+////////////////////////////////////////////////////////////////////////
 // Page navigation:
-document.querySelector('.nav_links').addEventListener('click', function (e) {
+
+const navLinks = document.querySelector('.nav__links');
+
+navLinks.addEventListener('click', function (e) {
   e.preventDefault();
+
   if (e.target.classList.contains('nav__link')) {
     const id = e.target.getAttribute('href');
     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
   }
 });
 
-// Tabed component:
+// Tabbed component:
 tabsContainer.addEventListener('click', function (e) {
   const clicked = e.target.closest('.operations__tab');
 
+  // Guard clause
   if (!clicked) return;
 
-  tabs.forEach(tab => tab.classList.remove('operations__content--actiive'));
+  // Remove active classes
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
 
+  // Activate tab
   clicked.classList.add('operations__tab--active');
 
+  // Activate content area
   document
-    .querySelector(`operations__content--${clicked.dataset.tab}`)
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
     .classList.add('operations__content--active');
 });
 
@@ -82,6 +93,7 @@ const handleHover = function (e) {
   }
 };
 
+// Passing "argument" into handler of fade animation:
 nav.addEventListener('mouseover', handleHover.bind(0.5));
 nav.addEventListener('mouseout', handleHover.bind(1));
 
@@ -90,6 +102,7 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 
 const header = document.querySelector('.header');
 const navHeight = nav.getBoundingClientRect().height;
+
 const stickyNav = function (entries) {
   const [entry] = entries;
 
@@ -108,8 +121,10 @@ headerObserver.observe(header);
 ////////////////////////////////////////////////////////////////////////
 // Reveal sections:
 const allSections = document.querySelectorAll('.section');
+
 const revealSection = function (entries, observer) {
   const [entry] = entries;
+
   if (!entry.isIntersecting) return;
 
   entry.target.classList.remove('section--hidden');
@@ -204,12 +219,21 @@ const slider = function () {
     activateDot(currSlide);
   };
 
+  const prevSlide = function () {
+    if (currSlide === 0) {
+      currSlide = maxSlide - 1;
+    } else {
+      currSlide--;
+    }
+    goToSlide(currSlide);
+    activateDot(currSlide);
+  };
+
   const init = function () {
     goToSlide(0);
     createDots();
     activateDot(0);
   };
-
   init();
 
   // Event handlers:
@@ -217,6 +241,11 @@ const slider = function () {
   btnLeft.addEventListener('click', prevSlide);
 
   document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') prevSlide();
+    e.key === 'ArrowRight' && nextSlide();
+  });
+
+  dotContainer.addEventListener('click', function (e) {
     if (e.target.classList.contains('dots__dot')) {
       const { slide } = e.target.dataset;
       goToSlide(slide);
