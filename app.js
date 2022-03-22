@@ -14,14 +14,12 @@ const tabsContent = document.querySelectorAll('.operations__content');
 ////////////////////////////////////////////////////////////////////////////
 // Modal window functionality:
 
-const openModalWindow = function (e) {
-  e.preventDefault();
+const openModalWindow = function () {
   modal.classList.remove('hidden');
   overlay.classList.remove('hidden');
 };
 
-const closeModalWindow = function (e) {
-  e.preventDefault();
+const closeModalWindow = function () {
   modal.classList.add('hidden');
   overlay.classList.add('hidden');
 };
@@ -32,6 +30,7 @@ overlay.addEventListener('click', closeModalWindow);
 
 // Close modal window when type Esc button:
 document.addEventListener('keydown', function (e) {
+  e.preventDefault();
   if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
     closeModalWindow();
   }
