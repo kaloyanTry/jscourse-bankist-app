@@ -39,7 +39,7 @@ document.addEventListener('keydown', function (e) {
 ////////////////////////////////////////////////////////////////////////
 // Button scrolling:
 
-btnScrollTo.addEventListener('click', function (e) {
+btnScrollTo.addEventListener('click', function () {
   section1.scrollIntoView({ behavior: 'smooth' });
 });
 
@@ -181,7 +181,6 @@ const slider = function () {
   const maxSlide = slides.length;
 
   // Slider functions:
-
   const createDots = function () {
     slides.forEach(function (_, i) {
       dotContainer.insertAdjacentHTML(
